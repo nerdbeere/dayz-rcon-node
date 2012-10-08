@@ -1,0 +1,47 @@
+!!!
+html
+  head
+    title= "Dayz"
+    link(rel='stylesheet', href='/css/bootstrap.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+    script(src='/js/bootstrap.js')
+  body
+
+div.container
+  table.table.table-striped.users
+    thead
+      tr
+        th name
+        th is_dead
+    tbody
+
+script(type='text/javascript')
+  $().ready(function() {
+    var $this = this;
+
+
+    function loadSurvivors() {
+      $.getJSON('/getSurvivors', function(data) {
+        var body = $('<tbody>')
+        $.each(data, function(key, value) {
+          var row = $('<tr>'),
+            name = $('<td>');
+            alive = $('<td>');
+
+            name.text(value.name);
+            alive.text(value.is_dead);
+
+            row.append(name);
+            row.append(alive);
+
+            body.append(row);
+        });
+
+        $('.users tbody').remove();
+        $('.users').append(body);
+      });
+    }
+
+    loadSurvivors();
+    var reloadInterval = window.setInterval(loadSurvivors, 5000);
+  });
