@@ -3,36 +3,98 @@ html
   head
     title= "Dayz"
     link(rel='stylesheet', href='/css/bootstrap.css')
+    link(rel='stylesheet', href='/css/styles.css')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
     script(src='/js/bootstrap.js')
   body
 
-div.container
+div.container-fluid
   table.table.table-striped.users
     thead
       tr
         th name
+        th blood
+        th inventory
+        th backpack
         th is_dead
+        th.position [ x | y ]
     tbody
 
 script(type='text/javascript')
+  var disableReload = false;
   $().ready(function() {
     var $this = this;
 
+    var oldPositions = {};
 
     function loadSurvivors() {
+      if(disableReload || $('.btn-group').hasClass('open')) {
+        return false;
+      }
       $.getJSON('/getSurvivors', function(data) {
         var body = $('<tbody>')
         $.each(data, function(key, value) {
-          var row = $('<tr>'),
-            name = $('<td>');
-            alive = $('<td>');
+            var row = $('<tr>');
+            var name = $('<td>');
+            var alive = $('<td>');
+            var blood = $('<td>');
+
+            blood.html(parseValues(value.medical)[7]);
+            
+            var inventory = $('<td>').html('<div class="btn-group"><button class="btn">Inventory</button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button><ul class="dropdown-menu"></ul></div>');
+            var invVals = parseValues(value.inventory);
+            
+            $.each(invVals, function(key, value) {
+              $('.dropdown-menu', inventory).append('<li><a href="#">' + value + '</a></li>');
+            });
+
+            var backpack = $('<td>').html('<div class="btn-group"><button class="btn">Backpack</button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button><ul class="dropdown-menu"></ul></div>');
+            var backVals = parseValues(value.backpack);
+            
+            $.each(backVals, function(key, value) {
+              $('.dropdown-menu', backpack).append('<li><a href="#">' + value + '</a></li>');
+            });
+
+            position = $('<td>');
 
             name.text(value.name);
             alive.text(value.is_dead);
 
+            var pos = parseValues(value.pos);
+            value.coords = {
+              x: pos[1],
+              y: pos[2]
+            }
+
+            var posChangeX = '';
+            var posChangeY = '';
+            var arrow = $('<i>');
+            if(typeof oldPositions[value.unique_id] != 'undefined') {
+              var posValChangeX = (value.coords.x - oldPositions[value.unique_id].x).toFixed(2);
+              var posValChangeY = (value.coords.y - oldPositions[value.unique_id].y).toFixed(2)
+
+              posChangeX = ' <span class="posChange">' + posValChangeX + '</span>';
+              posChangeY = ' <span class="posChange">' + posValChangeY + '</span>';
+              console.log((posValChangeX != 0 && posValChangeY != 0));
+              if(posValChangeX != 0 && posValChangeY != 0 && false) {
+                arrow.addClass('icon icon-arrow-up');
+                arrow.css({'-webkit-transform': 'rotate(' + getCompassPos({x: oldPositions[value.unique_id].x, y: oldPositions[value.unique_id].y}, {x: value.coords.x, y: value.coords.y}) + 'deg)'});
+              }
+            } 
+
+            if((posValChangeX != 0 && posValChangeY != 0) || typeof oldPositions[value.unique_id] == 'undefined') {
+              oldPositions[value.unique_id] = value.coords;
+            }
+
+            position.html('<span>[ ' + value.coords.x + posChangeX + ' | ' + value.coords.y + posChangeY + ' ]</span>');
+            position.append(arrow);
+
             row.append(name);
+            row.append(blood);
+            row.append(inventory);
+            row.append(backpack);
             row.append(alive);
+            row.append(position);
 
             body.append(row);
         });
@@ -42,6 +104,17 @@ script(type='text/javascript')
       });
     }
 
+    function getCompassPos(pos1, pos2) {
+      var arc = (Math.atan((pos1.x - pos2.x) / (pos1.y - pos2.y)) * 180 / Math.PI);
+      return arc;
+    }
+
+    function parseValues(val) {
+      var text = val.replace(/[\[|\]|\"]/g, '');
+
+      return text.split(',');
+    }
+
     loadSurvivors();
-    var reloadInterval = window.setInterval(loadSurvivors, 5000);
+    var reloadInterval = window.setInterval(loadSurvivors, 1000);
   });

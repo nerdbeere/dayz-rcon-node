@@ -35,15 +35,12 @@ app.get('/getSurvivors', function (req, res) {
 function getSurvivors(callback) {
 	var mysql      = require('mysql');
 	var connection = mysql.createConnection({
-	  host     : 'asd',
-	  user     : 'asd',
-	  password : 'asd',
-	  database : 'asd'
+	  
 	});
 
 	connection.connect();
 
-	connection.query('SELECT * FROM dayzlingor.survivor INNER JOIN dayzlingor.profile ON dayzlingor.survivor.unique_id = dayzlingor.profile.unique_id  WHERE is_dead = 0 AND last_update > NOW() - 60;', function(err, rows, fields) {
+	connection.query('SELECT * FROM dayzlingor.survivor INNER JOIN dayzlingor.profile ON dayzlingor.survivor.unique_id = dayzlingor.profile.unique_id  WHERE is_dead = 0 AND last_update > NOW() - 6000;', function(err, rows, fields) {
 	  if (err) throw err;
 
 	  callback(rows);
