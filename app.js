@@ -26,6 +26,13 @@ app.get('/', function (req, res) {
   });
 });
 
+app.get('/getSurvivor', function (req, res) {
+  res.render('survivor.jade', { locals: {
+      
+    }
+  });
+});
+
 app.get('/getSurvivors', function (req, res) {
   getSurvivors(function(data) {
   	res.json(data);
@@ -40,7 +47,7 @@ function getSurvivors(callback) {
 
 	connection.connect();
 
-	connection.query('SELECT * FROM dayzlingor.survivor INNER JOIN dayzlingor.profile ON dayzlingor.survivor.unique_id = dayzlingor.profile.unique_id  WHERE is_dead = 0 AND last_update > NOW() - 6000;', function(err, rows, fields) {
+	connection.query('SELECT * FROM dayzlingor.survivor INNER JOIN dayzlingor.profile ON dayzlingor.survivor.unique_id = dayzlingor.profile.unique_id  WHERE is_dead = 0 AND last_update > NOW() - 120;', function(err, rows, fields) {
 	  if (err) throw err;
 
 	  callback(rows);
@@ -50,4 +57,3 @@ function getSurvivors(callback) {
 }
 
 app.listen(port);
-console.log('Listening on port 3000');

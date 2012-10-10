@@ -5,3 +5,19 @@
 .position {
 	width: 300px;
 }
+
+.users td {
+	vertical-align: middle;
+}
+
+.content {
+	margin-top: 50px;
+}
+
+.green {
+	color: #31B404;
+}
+
+.red {
+	color: #DF0101;
+}

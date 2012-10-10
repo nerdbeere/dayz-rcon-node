@@ -1,0 +1,45 @@
+div#accordion.accordion
+	div.accordion-group
+		div.accordion-heading
+			a(data-toggle='collapse', data-parent="#accordion", href="#collapseOne").accordion-toggle Overview
+		div#collapseOne.accordion-body.collapse.in
+			div.accordion-inner.overview
+				table.table.table-condensed
+					tr
+						th Name
+						td.playerName
+					tr
+						th Blood
+						td.blood
+					tr
+						th Humanity
+						td.humanity
+					tr
+						th Zombie kills
+						td.zombieKills
+					tr
+						th Player kills
+						td.playerKills
+					tr
+						th Bandit kills
+						td.banditKills
+					tr
+						th Headshots
+						td.headshots
+					tr
+						th Survival time
+						td.survivalTime
+					tr
+						th Position
+						td.position
+				
+		div.accordion-heading
+			a(data-toggle='collapse', data-parent="#accordion", href="#collapseTwo").accordion-toggle Inventory
+		div#collapseTwo.accordion-body.collapse
+			div.accordion-inner.inventory
+				ul#inventory.unstyled
+		div.accordion-heading
+			a(data-toggle='collapse', data-parent="#accordion", href="#collapseThree").accordion-toggle Backpack
+		div#collapseThree.accordion-body.collapse
+			div.accordion-inner.backpack
+				ul#backpack.unstyled
