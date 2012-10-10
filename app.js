@@ -43,6 +43,7 @@ function getSurvivors(callback) {
 	var mysql      = require('mysql');
 	var connection = mysql.createConnection({
 	  
+	  
 	});
 
 	connection.connect();
