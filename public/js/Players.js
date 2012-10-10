@@ -53,12 +53,12 @@ var Players = {
             var posChangeX = '';
             var posChangeY = '';
             var arrow = $('<i>');
-            if(typeof Players.oldPositions[value.unique_id] != 'undefined' && false) {
+            if(typeof Players.oldPositions[value.unique_id] != 'undefined') {
               var posValChangeX = (value.coords.x - Players.oldPositions[value.unique_id].x).toFixed(2);
               var posValChangeY = (value.coords.y - Players.oldPositions[value.unique_id].y).toFixed(2)
 
-              posChangeX = ' <span class="posChange">' + posValChangeX + '</span>';
-              posChangeY = ' <span class="posChange">' + posValChangeY + '</span>';
+              //posChangeX = ' <span class="posChange">' + posValChangeX + '</span>';
+              //posChangeY = ' <span class="posChange">' + posValChangeY + '</span>';
               if(posValChangeX != 0 && posValChangeY != 0 && false) {
                 arrow.addClass('icon icon-arrow-up');
                 arrow.css({'-webkit-transform': 'rotate(' + Players.getCompassPos({x: Players.oldPositions[value.unique_id].x, y: Players.oldPositions[value.unique_id].y}, {x: value.coords.x, y: value.coords.y}) + 'deg)'});
@@ -70,6 +70,11 @@ var Players = {
             }
 
             position.html('<span>[ ' + value.coords.x + posChangeX + ' | ' + value.coords.y + posChangeY + ' ]</span>');
+            if(posValChangeX != 0 || posValChangeY != 0) {
+            	position.css({'background-color': '#DDD'});
+            } else {
+            	position.css({'background-color': '#FFF'});
+            }
             position.append(arrow);
 
             var inspect = $('<td>').append($('<a>').addClass('btn inspectPlayer').data('uniqueId', value.unique_id).append($('<i>').addClass('icon icon-search')));
